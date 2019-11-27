@@ -18,8 +18,7 @@ class Day5 : AoC<Int, Int> {
         val containsForbidden: (String) -> Boolean =
             { string: String -> listOf("ab", "cd", "pq", "xy").map { it in string }.any { it } }
 
-        return input().trim().split("\n")
-            .map { it.trim() }
+        return inputLines()
             .filter(containsThreeVowels)
             .filter(containsLetterTwice)
             .filterNot(containsForbidden)
@@ -39,8 +38,7 @@ class Day5 : AoC<Int, Int> {
             letters.map { ".*$it.$it.*".toRegex().containsMatchIn(string) }.any { it }
         }
 
-        return input().trim().split("\n")
-            .map { it.trim() }
+        return inputLines()
             .filter(containsLetterPairTwice)
             .filter(containsLetterBetweenSame)
             .size

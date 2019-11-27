@@ -10,6 +10,9 @@ interface AoC<FS, SS> {
         return File(this::class.java.getResource(resourcePath).toURI()).readText()
     }
 
+    fun inputTrimmed(fileName: String = "input.txt") = input(fileName).trim()
+    fun inputLines(fileName: String = "input.txt") = inputTrimmed(fileName).split("\n").map { it.trim() }
+
     fun firstStar(): FS
     fun secondStar(): SS
     fun solve() {

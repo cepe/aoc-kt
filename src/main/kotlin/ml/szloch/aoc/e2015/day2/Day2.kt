@@ -15,7 +15,7 @@ class Day2 : AoC<Int, Int> {
 
     override fun secondStar(): Int = boxes().map { it.volume() + it.dims().sorted().subList(0, 2).sum() * 2 }.sum()
 
-    private fun boxes(): List<Box> = input().trim().split("\n").map(this::parseLine)
+    private fun boxes(): List<Box> = inputLines().map(this::parseLine)
 
     private fun parseLine(line: String): Box {
         val list = line.split("x").map(String::toInt)

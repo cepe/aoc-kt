@@ -52,10 +52,9 @@ class Day3 : AoC<Int, Int> {
             }
         }
         return visitedHouses.size
-
     }
 
-    private fun encodedMoves() = input().trim().toLowerCase()
+    private fun encodedMoves() = inputTrimmed().toLowerCase()
 
     private fun decodeMoves(mover: Mover, encodedSantaMoves: String): List<KFunction0<Unit>> {
         return encodedSantaMoves.map {
@@ -68,7 +67,6 @@ class Day3 : AoC<Int, Int> {
             }
         }
     }
-
 }
 
 fun main() {

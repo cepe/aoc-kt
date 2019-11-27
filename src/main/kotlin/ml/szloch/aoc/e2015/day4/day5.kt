@@ -13,7 +13,7 @@ class Day4 : AoC<Int, Int> {
     }
 
     override fun firstStar(): Int {
-        val secret = input().trim()
+        val secret = inputTrimmed()
         return generateSequence(0) { it + 1 }
             .map { Pair(it, (secret + it).md5()) }
             .filter { it.second.startsWith("00000") }
@@ -22,7 +22,7 @@ class Day4 : AoC<Int, Int> {
     }
 
     override fun secondStar(): Int {
-        val secret = input().trim()
+        val secret = inputTrimmed()
         return generateSequence(0) { it + 1 }
             .map { Pair(it, (secret + it).md5()) }
             .filter { it.second.startsWith("000000") }

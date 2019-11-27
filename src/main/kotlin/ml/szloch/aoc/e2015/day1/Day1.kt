@@ -5,7 +5,7 @@ import ml.szloch.aoc.AoC
 class Day1 : AoC<Int, Int> {
 
     override fun firstStar(): Int {
-        return input().map {
+        return inputTrimmed().map {
             when (it) {
                 '(' -> 1
                 ')' -> -1
@@ -15,7 +15,7 @@ class Day1 : AoC<Int, Int> {
     }
 
     override fun secondStar(): Int {
-        return input()
+        return inputTrimmed()
             .map {
                 when (it) {
                     '(' -> 1
