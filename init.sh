@@ -29,7 +29,7 @@ function create_directories_for_solutions() {
     if [[ -f "$SOLUTION_FILE" ]]; then
       echo "Skipping file $SOLUTION_FILE"
     else
-      echo "Creating file $SOLUTIONS_LOCATION/day$day/Day$day.kt"
+      echo "Creating file $SOLUTION_FILE"
       cat >"$SOLUTION_FILE" <<EOF
 package ml.szloch.aoc.e$YEAR.day$day
 
@@ -54,11 +54,11 @@ EOF
 function create_directories_for_tests() {
     for day in $(seq 25); do
     mkdir -pv "$TESTS_LOCATION/day$day"
-    TEST_FILE="$TESTS_LOCATION/day$day/Day$day.kt"
+    TEST_FILE="$TESTS_LOCATION/day$day/Day${day}Test.kt"
     if [[ -f "$TEST_FILE" ]]; then
       echo "Skipping file $TEST_FILE"
     else
-      echo "Creating file $TEST_FILE/day$day/Day${day}Test.kt"
+      echo "Creating file $TEST_FILE"
       cat >"$TEST_FILE" <<EOF
 package ml.szloch.aoc.e$YEAR.day$day
 
