@@ -2,7 +2,7 @@ package ml.szloch.aoc.e2019.day2
 
 import ml.szloch.aoc.AoC
 
-class Day1 : AoC<Int, Int> {
+class Day2 : AoC<Int, Int> {
 
     override fun firstStar(): Int {
         val memory = inputTrimmed()
@@ -49,5 +49,5 @@ class Day1 : AoC<Int, Int> {
 }
 
 fun main() {
-    Day1().solve()
+    Day2().solve()
 }
