@@ -5,7 +5,7 @@ import ml.szloch.aoc.AoC
 class Day1 : AoC<Int, Int> {
 
     override fun firstStar(): Int {
-        var memory = inputTrimmed()
+        val memory = inputTrimmed()
             .split(",")
             .map(String::toInt)
             .toMutableList()
