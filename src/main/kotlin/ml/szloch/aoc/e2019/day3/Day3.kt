@@ -11,23 +11,16 @@ class Mover {
     val points: MutableSet<Pair<Int, Int>> = mutableSetOf()
     val distanceTo: MutableMap<Pair<Int, Int>, Int> = mutableMapOf()
 
-    init {
-        distanceTo.putIfAbsent(Pair(0, 0), 0)
-    }
+    fun applyCommand(pathCommand: String) {
+        val times = pathCommand.substring(1).toInt()
 
-    fun move(move: Move) {
-        when (move) {
-            is Move.Left -> repeat(move.times) { moveLeft() }
-            is Move.Right -> repeat(move.times) { moveRight() }
-            is Move.Up -> repeat(move.times) { moveUp() }
-            is Move.Down -> repeat(move.times) { moveDown() }
+        return when (pathCommand[0]) {
+            'U' -> repeat(times) { moveTo(x, y + 1) }
+            'L' -> repeat(times) { moveTo(x - 1, y) }
+            'R' -> repeat(times) { moveTo(x + 1, y) }
+            else -> repeat(times) { moveTo(x, y - 1) }
         }
     }
-
-    private fun moveLeft() = moveTo(x - 1, y)
-    private fun moveRight() = moveTo(x + 1, y)
-    private fun moveDown() = moveTo(x, y - 1)
-    private fun moveUp() = moveTo(x, y + 1)
 
     private fun moveTo(i: Int, j: Int) {
         x = i
@@ -39,23 +32,16 @@ class Mover {
 }
 
 
-sealed class Move {
-    class Left(val times: Int) : Move()
-    class Right(val times: Int) : Move()
-    class Up(val times: Int) : Move()
-    class Down(val times: Int) : Move()
-}
-
 class Day3 : AoC<Int?, Int> {
 
     override fun firstStar(): Int? {
-        val (firstWire, secondWire) = getWirePaths()
+        val (firstWire, secondWire) = wires()
         val crosses = firstWire.points.intersect(secondWire.points)
         return crosses.map { abs(it.first) + abs(it.second) }.min()
     }
 
     override fun secondStar(): Int {
-        val (firstWire, secondWire) = getWirePaths()
+        val (firstWire, secondWire) = wires()
         val crosses = firstWire.points.intersect(secondWire.points)
         val firstWireDistances = firstWire.distanceTo
         val secondWireDistances = secondWire.distanceTo
@@ -63,38 +49,18 @@ class Day3 : AoC<Int?, Int> {
         return firstWireDistances.getValue(closestCross!!) + secondWireDistances.getValue(closestCross)
     }
 
-    private fun getWirePaths(): Pair<Mover, Mover> {
-        val paths = inputLines()
-            .map(String::trim)
-
-        val firstWirePathCommands = paths[0].split(",").map(this::toMoveCommands)
+    private fun wires(): Pair<Mover, Mover> {
+        val paths = inputLines().map(String::trim)
         val firstWire = Mover()
-        firstWirePathCommands.forEach(firstWire::move)
+        paths[0].split(",").forEach(firstWire::applyCommand)
 
-        val secondWirePathCommands = paths[1].split(",").map(this::toMoveCommands)
         val secondWire = Mover()
-        secondWirePathCommands.forEach(secondWire::move)
+        paths[1].split(",").forEach(secondWire::applyCommand)
 
         return Pair(firstWire, secondWire)
     }
-
-    private fun toMoveCommands(stringCommand: String): Move {
-        val matchedCommand = "([LRUD])(\\d+)".toRegex().matchEntire(stringCommand)
-        if (matchedCommand != null) {
-            val matchedGroups = matchedCommand.groupValues
-            val times = matchedGroups[2].toInt()
-
-            when (matchedGroups[1]) {
-                "U" -> return Move.Up(times)
-                "L" -> return Move.Left(times)
-                "R" -> return Move.Right(times)
-                "D" -> return Move.Down(times)
-            }
-        }
-        throw IllegalStateException()
-    }
-
 }
+
 
 fun main() {
     Day3().solve()
