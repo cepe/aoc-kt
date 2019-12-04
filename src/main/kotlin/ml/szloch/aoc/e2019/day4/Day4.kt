@@ -22,7 +22,7 @@ class Day4 : AoC<Int, Int> {
             .size
     }
 
-    private fun notDecreasing(stringNum: String) = stringNum.asSequence().windowed(2).all { (a, b) -> a <= b }
+    private fun notDecreasing(string: String) = string.asSequence().windowed(2).all { (a, b) -> a <= b }
 
     private fun twoInRow(string: String): Boolean = string.groupBy { it }.any { (_, g) -> g.size == 2 }
 
