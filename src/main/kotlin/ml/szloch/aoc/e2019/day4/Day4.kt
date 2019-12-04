@@ -23,14 +23,8 @@ class Day4 : AoC<Int, Int> {
     }
 
     private fun twoInRow(string: String): Boolean {
-        for ((_, g) in string.groupBy { it }) {
-            if (g.size == 2) {
-                return true
-            }
-        }
-        return false
+        return string.groupBy { it }.any { (_, g) -> g.size == 2 }
     }
-
 
     private fun inputRange(): IntRange {
         val twoIntegers = inputTrimmed().split("-").map(String::toInt)
