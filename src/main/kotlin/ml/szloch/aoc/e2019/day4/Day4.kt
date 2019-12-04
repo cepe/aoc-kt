@@ -23,23 +23,12 @@ class Day4 : AoC<Int, Int> {
     }
 
     private fun twoInRow(string: String): Boolean {
-        val chars = string.toCharArray()
-        var counter = 0
-
-        var prev = '$'
-        for (c in chars) {
-            if (c == prev) {
-                counter += 1
-            } else {
-                if (counter == 2) {
-                    return true
-                }
-                counter = 1
+        for ((_, g) in string.groupBy { it }) {
+            if (g.size == 2) {
+                return true
             }
-
-            prev = c
         }
-        return counter == 2
+        return false
     }
 
 
