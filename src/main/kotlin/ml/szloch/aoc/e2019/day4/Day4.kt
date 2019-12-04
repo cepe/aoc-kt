@@ -9,7 +9,7 @@ class Day4 : AoC<Int, Int> {
             .map { it.toString() }
             .filter { it.length == 6 }
             .filter { "(\\d)\\1".toRegex().containsMatchIn(it) }
-            .filter { it == it.toCharArray().sorted().joinToString("") }
+            .filter(this::notDecreasing)
             .size
     }
 
@@ -18,13 +18,13 @@ class Day4 : AoC<Int, Int> {
             .map { it.toString() }
             .filter { it.length == 6 }
             .filter(this::twoInRow)
-            .filter { it == it.toCharArray().sorted().joinToString("") }
+            .filter(this::notDecreasing)
             .size
     }
 
-    private fun twoInRow(string: String): Boolean {
-        return string.groupBy { it }.any { (_, g) -> g.size == 2 }
-    }
+    private fun notDecreasing(stringNum: String) = stringNum.asSequence().windowed(2).all { (a, b) -> a <= b }
+
+    private fun twoInRow(string: String): Boolean = string.groupBy { it }.any { (_, g) -> g.size == 2 }
 
     private fun inputRange(): IntRange {
         val twoIntegers = inputTrimmed().split("-").map(String::toInt)
