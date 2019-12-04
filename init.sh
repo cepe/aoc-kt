@@ -17,13 +17,13 @@ TESTS_LOCATION="$SCRIPT_LOCATION/src/test/kotlin/ml/szloch/aoc/e$YEAR"
 INPUT_FILES_LOCATION="$SCRIPT_LOCATION/src/main/resources/ml/szloch/aoc/e$YEAR"
 
 function create_directories_for_inputs() {
-  for day in $(seq 25); do
+  for day in {01..25}; do
     mkdir -pv "$INPUT_FILES_LOCATION/day$day"
   done
 }
 
 function create_directories_for_solutions() {
-  for day in $(seq 25); do
+  for day in {01..25}; do
     mkdir -pv "$SOLUTIONS_LOCATION/day$day"
     SOLUTION_FILE="$SOLUTIONS_LOCATION/day$day/Day$day.kt"
     if [[ -f "$SOLUTION_FILE" ]]; then
@@ -52,7 +52,7 @@ EOF
 }
 
 function create_directories_for_tests() {
-    for day in $(seq 25); do
+    for day in {01..25}; do
     mkdir -pv "$TESTS_LOCATION/day$day"
     TEST_FILE="$TESTS_LOCATION/day$day/Day${day}Test.kt"
     if [[ -f "$TEST_FILE" ]]; then
