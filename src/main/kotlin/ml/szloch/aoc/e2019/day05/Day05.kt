@@ -3,82 +3,75 @@ package ml.szloch.aoc.e2019.day05
 import ml.szloch.aoc.AoC
 
 data class State(
-    val ip: Int,
-    val mem: List<Int>,
-    val input: List<Int>,
-    val output: List<Int>,
-    val halted: Boolean
+    var ip: Int,
+    val mem: MutableList<Int>,
+    val input: Int,
+    val output: MutableList<Int>,
+    var halted: Boolean
 )
 
 interface Operation {
-    fun execute(state: State): State
+    fun execute(state: State)
     fun opValue(mem: List<Int>, address: Int, mode: Boolean): Int = if (mode) address else mem[address]
-    fun op1(state: State, mode: Boolean): Int = opValue(state.mem, state.mem[state.ip + 1], mode)
-    fun op2(state: State, mode: Boolean): Int = opValue(state.mem, state.mem[state.ip + 2], mode)
-    fun op3(state: State, mode: Boolean): Int = opValue(state.mem, state.mem[state.ip + 3], mode)
+    fun op1(state: State, mode: Boolean = false) =
+        opValue(state.mem, state.mem[state.ip + 1], mode || (state.mem[state.ip] / 100) % 10 == 1)
+
+    fun op2(state: State): Int = opValue(state.mem, state.mem[state.ip + 2], state.mem[state.ip] / 100 >= 10)
+    fun op3(state: State): Int = opValue(state.mem, state.mem[state.ip + 3], true)
 }
 
-class AddOp(private val modes: Pair<Boolean, Boolean>) : Operation {
-    override fun execute(state: State): State {
-        val newMem = state.mem.toMutableList()
-        newMem[op3(state, true)] = op1(state, modes.first) + op2(state, modes.second)
-        return state.copy(ip = state.ip + 4, mem = newMem)
+class AddOp : Operation {
+    override fun execute(state: State) {
+        state.mem[op3(state)] = op1(state) + op2(state); state.ip += 4
     }
 }
 
-class MulOp(private val modes: Pair<Boolean, Boolean>) : Operation {
-    override fun execute(state: State): State {
-        val newMem = state.mem.toMutableList()
-        newMem[op3(state, true)] = op1(state, modes.first) * op2(state, modes.second)
-        return state.copy(ip = state.ip + 4, mem = newMem)
+class MulOp : Operation {
+    override fun execute(state: State) {
+        state.mem[op3(state)] = op1(state) * op2(state); state.ip += 4
     }
 }
-
 
 class ReadOp : Operation {
-    override fun execute(state: State): State {
-        val newMem = state.mem.toMutableList()
-        newMem[op1(state, true)] = state.input.first()
-        return state.copy(
-            ip = state.ip + 2, mem = newMem, input = state.input.drop(1)
-        )
+    override fun execute(state: State) {
+        state.mem[op1(state, true)] = state.input; state.ip += 2
     }
 }
 
-class WriteOp(private val mode: Boolean) : Operation {
-    override fun execute(state: State): State =
-        state.copy(ip = state.ip + 2, output = state.output.plus(op1(state, mode)))
-}
-
-
-class JumpIfTrueOp(private val modes: Pair<Boolean, Boolean>) : Operation {
-    override fun execute(state: State): State =
-        state.copy(ip = if (op1(state, modes.first) != 0) op2(state, modes.second) else state.ip + 3)
-}
-
-class JumpIfFalseOp(private val modes: Pair<Boolean, Boolean>) : Operation {
-    override fun execute(state: State): State =
-        state.copy(ip = if (op1(state, modes.first) == 0) op2(state, modes.second) else state.ip + 3)
-}
-
-class LessThanOp(private val modes: Pair<Boolean, Boolean>) : Operation {
-    override fun execute(state: State): State {
-        val newMem = state.mem.toMutableList()
-        newMem[op3(state, true)] = if (op1(state, modes.first) < op2(state, modes.second)) 1 else 0
-        return state.copy(ip = state.ip + 4, mem = newMem)
+class WriteOp : Operation {
+    override fun execute(state: State) {
+        state.output.add(op1(state)); state.ip += 2
     }
 }
 
-class EqualsOp(private val modes: Pair<Boolean, Boolean>) : Operation {
-    override fun execute(state: State): State {
-        val newMem = state.mem.toMutableList()
-        newMem[op3(state, true)] = if (op1(state, modes.first) == op2(state, modes.second)) 1 else 0
-        return state.copy(ip = state.ip + 4, mem = newMem)
+class JumpIfTrueOp : Operation {
+    override fun execute(state: State) {
+        state.ip = if (op1(state) != 0) op2(state) else state.ip + 3
+    }
+}
+
+class JumpIfFalseOp : Operation {
+    override fun execute(state: State) {
+        state.ip = if (op1(state) == 0) op2(state) else state.ip + 3
+    }
+}
+
+class LessThanOp : Operation {
+    override fun execute(state: State) {
+        state.mem[op3(state)] = if (op1(state) < op2(state)) 1 else 0; state.ip += 4
+    }
+}
+
+class EqualsOp : Operation {
+    override fun execute(state: State) {
+        state.mem[op3(state)] = if (op1(state) == op2(state)) 1 else 0; state.ip += 4
     }
 }
 
 class HaltOp : Operation {
-    override fun execute(state: State): State = state.copy(halted = true)
+    override fun execute(state: State) {
+        state.halted = true
+    }
 }
 
 class Day05 : AoC<Int, Int> {
@@ -90,7 +83,7 @@ class Day05 : AoC<Int, Int> {
             .map(String::toInt)
             .toMutableList()
 
-        return runProgram(memory, listOf(1)).last()
+        return runProgram(memory, 1).last()
     }
 
     override fun secondStar(): Int {
@@ -100,38 +93,35 @@ class Day05 : AoC<Int, Int> {
             .map(String::toInt)
             .toMutableList()
 
-        return runProgram(memory, listOf(5)).last()
+        return runProgram(memory, 5).last()
     }
 
-    private fun runProgram(mem: MutableList<Int>, input: List<Int>): List<Int> {
-        var executionContext = State(0, mem, input, listOf(), false)
+    private fun runProgram(mem: MutableList<Int>, input: Int): List<Int> {
+        val state = State(0, mem, input, mutableListOf(), false)
 
-        while (!executionContext.halted) {
-            executionContext = operationAt(executionContext.ip, executionContext.mem).execute(executionContext)
+        while (!state.halted) {
+            currentOperation(state).execute(state)
         }
-        return executionContext.output
+        return state.output
     }
 
-    private fun operationAt(ip: Int, mem: List<Int>): Operation {
-        val opcodeAndModes = mem[ip]
-        val opcode = opcodeAndModes % 100
-        val modesEncoded = opcodeAndModes / 100
-        val modes = Pair(modesEncoded % 10 == 1, (modesEncoded / 10) % 10 == 1)
-
-        return when (opcode) {
-            1 -> AddOp(modes)
-            2 -> MulOp(modes)
+    private fun currentOperation(state: State): Operation {
+        return when (state.mem[state.ip] % 100) {
+            1 -> AddOp()
+            2 -> MulOp()
             3 -> ReadOp()
-            4 -> WriteOp(modes.first)
-            5 -> JumpIfTrueOp(modes)
-            6 -> JumpIfFalseOp(modes)
-            7 -> LessThanOp(modes)
-            8 -> EqualsOp(modes)
+            4 -> WriteOp()
+            5 -> JumpIfTrueOp()
+            6 -> JumpIfFalseOp()
+            7 -> LessThanOp()
+            8 -> EqualsOp()
             99 -> HaltOp()
-            else -> throw IllegalStateException()
+            else -> {
+                println(state.mem[state.ip])
+                throw IllegalStateException()
+            }
         }
     }
-
 }
 
 fun main() {
