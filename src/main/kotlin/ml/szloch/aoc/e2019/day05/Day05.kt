@@ -2,7 +2,7 @@ package ml.szloch.aoc.e2019.day05
 
 import ml.szloch.aoc.AoC
 
-data class ExecutionContext(
+data class State(
     val ip: Int,
     val mem: List<Int>,
     val input: List<Int>,
@@ -11,102 +11,74 @@ data class ExecutionContext(
 )
 
 interface Operation {
-    fun execute(executionContext: ExecutionContext): ExecutionContext
-    fun opValue(mem: List<Int>, address: Int, mode: Boolean): Int {
-        return if (mode) address else mem[address]
-    }
-
-    fun lop(executionContext: ExecutionContext, mode: Boolean): Int {
-        return opValue(executionContext.mem, executionContext.mem[executionContext.ip + 1], mode)
-    }
-
-    fun rop(executionContext: ExecutionContext, mode: Boolean): Int {
-        return opValue(executionContext.mem, executionContext.mem[executionContext.ip + 2], mode)
-    }
-
+    fun execute(state: State): State
+    fun opValue(mem: List<Int>, address: Int, mode: Boolean): Int = if (mode) address else mem[address]
+    fun op1(state: State, mode: Boolean): Int = opValue(state.mem, state.mem[state.ip + 1], mode)
+    fun op2(state: State, mode: Boolean): Int = opValue(state.mem, state.mem[state.ip + 2], mode)
+    fun op3(state: State, mode: Boolean): Int = opValue(state.mem, state.mem[state.ip + 3], mode)
 }
 
 class AddOp(private val modes: Pair<Boolean, Boolean>) : Operation {
-    override fun execute(executionContext: ExecutionContext): ExecutionContext {
-        val target = executionContext.mem[executionContext.ip + 3]
-        val newMem = executionContext.mem.toMutableList()
-        newMem[target] = lop(executionContext, modes.first) + rop(executionContext, modes.second)
-        return executionContext.copy(ip = executionContext.ip + 4, mem = newMem)
+    override fun execute(state: State): State {
+        val newMem = state.mem.toMutableList()
+        newMem[op3(state, true)] = op1(state, modes.first) + op2(state, modes.second)
+        return state.copy(ip = state.ip + 4, mem = newMem)
     }
 }
 
 class MulOp(private val modes: Pair<Boolean, Boolean>) : Operation {
-    override fun execute(executionContext: ExecutionContext): ExecutionContext {
-        val target = executionContext.mem[executionContext.ip + 3]
-        val newMem = executionContext.mem.toMutableList()
-        newMem[target] = lop(executionContext, modes.first) * rop(executionContext, modes.second)
-        return executionContext.copy(ip = executionContext.ip + 4, mem = newMem)
+    override fun execute(state: State): State {
+        val newMem = state.mem.toMutableList()
+        newMem[op3(state, true)] = op1(state, modes.first) * op2(state, modes.second)
+        return state.copy(ip = state.ip + 4, mem = newMem)
     }
 }
 
 
 class ReadOp : Operation {
-    override fun execute(executionContext: ExecutionContext): ExecutionContext {
-        val target = executionContext.mem[executionContext.ip + 1]
-        val newMem = executionContext.mem.toMutableList()
-        newMem[target] = executionContext.input.first()
-        return executionContext.copy(
-            ip = executionContext.ip + 2, mem = newMem, input = executionContext.input.drop(1)
+    override fun execute(state: State): State {
+        val newMem = state.mem.toMutableList()
+        newMem[op1(state, true)] = state.input.first()
+        return state.copy(
+            ip = state.ip + 2, mem = newMem, input = state.input.drop(1)
         )
     }
 }
 
 class WriteOp(private val mode: Boolean) : Operation {
-    override fun execute(executionContext: ExecutionContext): ExecutionContext {
-        return executionContext.copy(
-            ip = executionContext.ip + 2, output = executionContext.output.plus(lop(executionContext, mode))
-        )
-    }
+    override fun execute(state: State): State =
+        state.copy(ip = state.ip + 2, output = state.output.plus(op1(state, mode)))
 }
 
 
 class JumpIfTrueOp(private val modes: Pair<Boolean, Boolean>) : Operation {
-    override fun execute(executionContext: ExecutionContext): ExecutionContext {
-        val newIp = if (lop(executionContext, modes.first) != 0) rop(
-            executionContext,
-            modes.second
-        ) else executionContext.ip + 3
-        return executionContext.copy(ip = newIp)
-    }
+    override fun execute(state: State): State =
+        state.copy(ip = if (op1(state, modes.first) != 0) op2(state, modes.second) else state.ip + 3)
 }
 
 class JumpIfFalseOp(private val modes: Pair<Boolean, Boolean>) : Operation {
-    override fun execute(executionContext: ExecutionContext): ExecutionContext {
-        val newIp = if (lop(executionContext, modes.first) == 0) rop(
-            executionContext,
-            modes.second
-        ) else executionContext.ip + 3
-        return executionContext.copy(ip = newIp)
-    }
+    override fun execute(state: State): State =
+        state.copy(ip = if (op1(state, modes.first) == 0) op2(state, modes.second) else state.ip + 3)
 }
 
 class LessThanOp(private val modes: Pair<Boolean, Boolean>) : Operation {
-    override fun execute(executionContext: ExecutionContext): ExecutionContext {
-        val target = executionContext.mem[executionContext.ip + 3]
-        val newMem = executionContext.mem.toMutableList()
-        newMem[target] = if (lop(executionContext, modes.first) < rop(executionContext, modes.second)) 1 else 0
-        return executionContext.copy(ip = executionContext.ip + 4, mem = newMem)
+    override fun execute(state: State): State {
+        val newMem = state.mem.toMutableList()
+        newMem[op3(state, true)] = if (op1(state, modes.first) < op2(state, modes.second)) 1 else 0
+        return state.copy(ip = state.ip + 4, mem = newMem)
     }
 }
 
 class EqualsOp(private val modes: Pair<Boolean, Boolean>) : Operation {
-    override fun execute(executionContext: ExecutionContext): ExecutionContext {
-        val target = executionContext.mem[executionContext.ip + 3]
-        val newMem = executionContext.mem.toMutableList()
-        newMem[target] = if (lop(executionContext, modes.first) == rop(executionContext, modes.second)) 1 else 0
-        return executionContext.copy(ip = executionContext.ip + 4, mem = newMem)
+    override fun execute(state: State): State {
+        val newMem = state.mem.toMutableList()
+        newMem[op3(state, true)] = if (op1(state, modes.first) == op2(state, modes.second)) 1 else 0
+        return state.copy(ip = state.ip + 4, mem = newMem)
     }
 }
 
 class HaltOp : Operation {
-    override fun execute(executionContext: ExecutionContext): ExecutionContext {
-        return executionContext.copy(halted = true)
-    }
+    override fun execute(state: State): State = state.copy(halted = true)
 }
 
 class Day05 : AoC<Int, Int> {
@@ -118,9 +90,7 @@ class Day05 : AoC<Int, Int> {
             .map(String::toInt)
             .toMutableList()
 
-        val input = listOf(1)
-
-        return runProgram(memory, input).last()
+        return runProgram(memory, listOf(1)).last()
     }
 
     override fun secondStar(): Int {
@@ -134,7 +104,7 @@ class Day05 : AoC<Int, Int> {
     }
 
     private fun runProgram(mem: MutableList<Int>, input: List<Int>): List<Int> {
-        var executionContext = ExecutionContext(0, mem, input, listOf(), false)
+        var executionContext = State(0, mem, input, listOf(), false)
 
         while (!executionContext.halted) {
             executionContext = operationAt(executionContext.ip, executionContext.mem).execute(executionContext)
