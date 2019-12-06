@@ -7,15 +7,10 @@ class Day06 : AoC<Int, Int> {
 
     override fun firstStar(): Int {
 
-        val galaxyMap = inputLines()
+        val galaxy = inputLines()
             .map { it.split(")") }
-            .map { Pair(it[0], it[1]) }
-
-        val galaxy = mutableMapOf<String, String>()
-
-        galaxyMap.forEach {
-            galaxy[it.second] = it.first
-        }
+            .map { it[1] to it[0] }
+            .toMap()
 
         return galaxy.keys.map { obj -> countOrbits(galaxy, obj) }.sum()
 
