@@ -5,7 +5,8 @@ import ml.szloch.aoc.AoC
 data class State(
     var ip: Int,
     val mem: MutableList<Int>,
-    val input: Int,
+    var inp: Int,
+    val input: List<Int>,
     val output: MutableList<Int>,
     var halted: Boolean
 )
@@ -34,7 +35,7 @@ class MulOp : Operation {
 
 class ReadOp : Operation {
     override fun execute(state: State) {
-        state.mem[op1(state, true)] = state.input; state.ip += 2
+        state.mem[op1(state, true)] = state.input[state.inp]; state.inp += 1; state.ip += 2
     }
 }
 
@@ -83,7 +84,7 @@ class Day05 : AoC<Int, Int> {
             .map(String::toInt)
             .toMutableList()
 
-        return runProgram(memory, 1).last()
+        return runProgram(memory, listOf(1)).last()
     }
 
     override fun secondStar(): Int {
@@ -93,11 +94,11 @@ class Day05 : AoC<Int, Int> {
             .map(String::toInt)
             .toMutableList()
 
-        return runProgram(memory, 5).last()
+        return runProgram(memory, listOf(5)).last()
     }
 
-    private fun runProgram(mem: MutableList<Int>, input: Int): List<Int> {
-        val state = State(0, mem, input, mutableListOf(), false)
+    private fun runProgram(mem: MutableList<Int>, input: List<Int>): List<Int> {
+        val state = State(0, mem, 0, input, mutableListOf(), false)
 
         while (!state.halted) {
             currentOperation(state).execute(state)
