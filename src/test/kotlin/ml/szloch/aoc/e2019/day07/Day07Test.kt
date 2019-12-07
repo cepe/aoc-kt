@@ -7,11 +7,11 @@ class Day07Test {
 
     @Test
     fun firstStar() {
-        Assertions.assertThat(Day07().firstStar()).isEqualTo(0)
+        Assertions.assertThat(Day07().firstStar()).isEqualTo(368584)
     }
 
     @Test
     fun secondStar() {
-        Assertions.assertThat(Day07().secondStar()).isEqualTo(0)
+        Assertions.assertThat(Day07().secondStar()).isEqualTo(35993240)
     }
 }
