@@ -19,6 +19,8 @@ class Day08 : AoC<Int, String> {
 
         return layers
             .fold(transparentLayer) { l1, l2 -> l1.zip(l2) { a, b -> if (a == '2') b else a }.joinToString("") }
+            .replace('1', '█')
+            .replace('0', ' ')
             .chunked(25)
             .joinToString("\n")
     }
