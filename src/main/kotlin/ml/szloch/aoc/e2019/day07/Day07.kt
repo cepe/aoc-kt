@@ -1,88 +1,9 @@
 package ml.szloch.aoc.e2019.day07
 
 import ml.szloch.aoc.AoC
+import ml.szloch.aoc.e2019.VM
 import java.util.*
 import kotlin.concurrent.thread
-import kotlin.random.Random
-
-data class VM(
-    val id: Int,
-    var ip: Int,
-    var iop: Int,
-    val mem: MutableList<Int>,
-    val input: Vector<Int>,
-    val output: Vector<Int>,
-    var halted: Boolean
-)
-
-interface Operation {
-    fun execute(vm: VM)
-    fun opValue(mem: List<Int>, address: Int, mode: Boolean): Int = if (mode) address else mem[address]
-    fun op1(vm: VM, mode: Boolean = false) =
-        opValue(vm.mem, vm.mem[vm.ip + 1], mode || (vm.mem[vm.ip] / 100) % 10 == 1)
-
-    fun op2(vm: VM): Int = opValue(vm.mem, vm.mem[vm.ip + 2], vm.mem[vm.ip] / 100 >= 10)
-    fun op3(vm: VM): Int = opValue(vm.mem, vm.mem[vm.ip + 3], true)
-}
-
-class AddOp : Operation {
-    override fun execute(vm: VM) {
-        vm.mem[op3(vm)] = op1(vm) + op2(vm); vm.ip += 4
-    }
-}
-
-class MulOp : Operation {
-    override fun execute(vm: VM) {
-        vm.mem[op3(vm)] = op1(vm) * op2(vm); vm.ip += 4
-    }
-}
-
-class ReadOp : Operation {
-    override fun execute(vm: VM) {
-        while (vm.input.size - 1 < vm.iop) {
-            Thread.sleep(0)
-        }
-        vm.mem[op1(vm, true)] = vm.input[vm.iop]; vm.iop += 1; vm.ip += 2
-    }
-}
-
-class WriteOp : Operation {
-    override fun execute(vm: VM) {
-        synchronized(vm.output) {
-            vm.output.add(op1(vm)); vm.ip += 2
-        }
-    }
-}
-
-class JumpIfTrueOp : Operation {
-    override fun execute(vm: VM) {
-        vm.ip = if (op1(vm) != 0) op2(vm) else vm.ip + 3
-    }
-}
-
-class JumpIfFalseOp : Operation {
-    override fun execute(vm: VM) {
-        vm.ip = if (op1(vm) == 0) op2(vm) else vm.ip + 3
-    }
-}
-
-class LessThanOp : Operation {
-    override fun execute(vm: VM) {
-        vm.mem[op3(vm)] = if (op1(vm) < op2(vm)) 1 else 0; vm.ip += 4
-    }
-}
-
-class EqualsOp : Operation {
-    override fun execute(vm: VM) {
-        vm.mem[op3(vm)] = if (op1(vm) == op2(vm)) 1 else 0; vm.ip += 4
-    }
-}
-
-class HaltOp : Operation {
-    override fun execute(vm: VM) {
-        vm.halted = true
-    }
-}
 
 private fun List<Int>.perms(): Sequence<List<Int>> {
     val list = this
@@ -102,7 +23,6 @@ private fun List<Int>.perms(): Sequence<List<Int>> {
 
 class Day07 : AoC<Int?, Int?> {
 
-
     override fun firstStar(): Int? {
         val memory = readMemory()
 
@@ -110,7 +30,7 @@ class Day07 : AoC<Int?, Int?> {
             val mutableMemory = memory.toMutableList()
             val output = Vector<Int>()
 
-            runProgram(mutableMemory, input, output)
+            VM(mutableMemory, input, output).startExecution()
             return output.last()
         }
 
@@ -140,7 +60,7 @@ class Day07 : AoC<Int?, Int?> {
 
         fun runProgram(input: Vector<Int>, output: Vector<Int>) {
             val mutableMemory = memory.toMutableList()
-            runProgram(mutableMemory, input, output)
+            VM(mutableMemory, input, output).startExecution()
         }
 
         val perms = listOf(5, 6, 7, 8, 9).perms()
@@ -161,32 +81,6 @@ class Day07 : AoC<Int?, Int?> {
                 a1Input.last()
             }
         }.max()
-    }
-
-
-    private fun runProgram(mem: MutableList<Int>, input: Vector<Int>, output: Vector<Int>) {
-        val state = VM(Random.nextInt(0, 100), 0, 0, mem, input, output, false)
-
-        while (!state.halted) {
-            currentOperation(state).execute(state)
-        }
-    }
-
-    private fun currentOperation(vm: VM): Operation {
-        return when (vm.mem[vm.ip] % 100) {
-            1 -> AddOp()
-            2 -> MulOp()
-            3 -> ReadOp()
-            4 -> WriteOp()
-            5 -> JumpIfTrueOp()
-            6 -> JumpIfFalseOp()
-            7 -> LessThanOp()
-            8 -> EqualsOp()
-            99 -> HaltOp()
-            else -> {
-                throw IllegalStateException()
-            }
-        }
     }
 }
 
