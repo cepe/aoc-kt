@@ -31,25 +31,25 @@ class WriteOp : Operation {
 
 class JumpIfTrueOp : Operation {
     override fun execute(vm: VM) {
-        vm.ip = if (op1(vm) != 0) op2(vm) else vm.ip + 3
+        vm.ip = if (op1(vm) != 0L) op2(vm) else vm.ip + 3
     }
 }
 
 class JumpIfFalseOp : Operation {
     override fun execute(vm: VM) {
-        vm.ip = if (op1(vm) == 0) op2(vm) else vm.ip + 3
+        vm.ip = if (op1(vm) == 0L) op2(vm) else vm.ip + 3
     }
 }
 
 class LessThanOp : Operation {
     override fun execute(vm: VM) {
-        vm.mem[ad3(vm)] = if (op1(vm) < op2(vm)) 1 else 0; vm.ip += 4
+        vm.mem[ad3(vm)] = if (op1(vm) < op2(vm)) 1L else 0; vm.ip += 4
     }
 }
 
 class EqualsOp : Operation {
     override fun execute(vm: VM) {
-        vm.mem[ad3(vm)] = if (op1(vm) == op2(vm)) 1 else 0; vm.ip += 4
+        vm.mem[ad3(vm)] = if (op1(vm) == op2(vm)) 1L else 0; vm.ip += 4
     }
 }
 

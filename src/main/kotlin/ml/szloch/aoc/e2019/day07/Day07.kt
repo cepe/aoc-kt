@@ -5,7 +5,7 @@ import ml.szloch.aoc.e2019.VM
 import java.util.*
 import kotlin.concurrent.thread
 
-private fun List<Int>.perms(): Sequence<List<Int>> {
+private fun List<Long>.perms(): Sequence<List<Long>> {
     val list = this
 
     return sequence {
@@ -21,20 +21,20 @@ private fun List<Int>.perms(): Sequence<List<Int>> {
     }
 }
 
-class Day07 : AoC<Int?, Int?> {
+class Day07 : AoC<Long?, Long?> {
 
-    override fun firstStar(): Int? {
+    override fun firstStar(): Long? {
         val memory = readMemory()
 
-        fun runProgram(input: Vector<Int>): Int {
-            val mutableMemory = memory.toMutableList()
-            val output = Vector<Int>()
+        fun runProgram(input: Vector<Long>): Long {
+            val mutableMemory = memory.toMutableMap()
+            val output = Vector<Long>()
 
             VM(mutableMemory, input, output).startExecution()
             return output.last()
         }
 
-        val perms = listOf(0, 1, 2, 3, 4).perms()
+        val perms = listOf(0L, 1, 2, 3, 4).perms()
 
         return perms.map {
             run {
@@ -48,22 +48,24 @@ class Day07 : AoC<Int?, Int?> {
         }.max()
     }
 
-    private fun readMemory(): List<Int> {
+    private fun readMemory(): Map<Long, Long> {
         return inputTrimmed()
             .split(",")
             .map(String::trim)
-            .map(String::toInt)
+            .map(String::toLong)
+            .mapIndexed { i, e -> i.toLong() to e }
+            .toMap()
     }
 
-    override fun secondStar(): Int? {
+    override fun secondStar(): Long? {
         val memory = readMemory()
 
-        fun runProgram(input: Vector<Int>, output: Vector<Int>) {
-            val mutableMemory = memory.toMutableList()
+        fun runProgram(input: Vector<Long>, output: Vector<Long>) {
+            val mutableMemory = memory.toMutableMap()
             VM(mutableMemory, input, output).startExecution()
         }
 
-        val perms = listOf(5, 6, 7, 8, 9).perms()
+        val perms = listOf(5L, 6, 7, 8, 9).perms()
 
         return perms.toList().map {
             run {
