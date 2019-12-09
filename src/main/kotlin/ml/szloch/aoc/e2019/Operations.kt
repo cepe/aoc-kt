@@ -53,6 +53,13 @@ class EqualsOp : Operation {
     }
 }
 
+class AdjustRelativeBaseOp : Operation {
+    override fun execute(vm: VM) {
+        vm.rb += op1(vm); vm.ip += 2
+    }
+}
+
+
 class HaltOp : Operation {
     override fun execute(vm: VM) {
         vm.halted = true

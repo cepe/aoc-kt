@@ -5,6 +5,7 @@ import java.util.*
 class VM(val mem: MutableMap<Long, Long>, val input: Vector<Long>, val output: Vector<Long>) {
     var ip = 0L
     var iop = 0
+    var rb = 0L
     var halted = false
 
     fun startExecution(): VM {
@@ -26,6 +27,7 @@ class VM(val mem: MutableMap<Long, Long>, val input: Vector<Long>, val output: V
             6L -> JumpIfFalseOp()
             7L -> LessThanOp()
             8L -> EqualsOp()
+            9L -> AdjustRelativeBaseOp()
             99L -> HaltOp()
             else -> {
                 throw IllegalStateException()
