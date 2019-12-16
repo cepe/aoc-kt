@@ -49,9 +49,9 @@ class Day10 : AoC<Int?, Int> {
         val sortedAroundLaser = points.minus(laserPosition)
             .sortedByAngle(laserPosition, laserPosition.copy(laserPosition.first, 0))
 
-        var counter = 0
+        var counter = 200
         val destroyed = mutableSetOf<Point>()
-        while (true) {
+        while (counter >= 0) {
             var lastPoint = laserPosition.copy(laserPosition.first - 1, laserPosition.second + 500)
             for (point in sortedAroundLaser) {
                 if (point in destroyed) continue
@@ -59,14 +59,14 @@ class Day10 : AoC<Int?, Int> {
                 if (det(laserPosition, lastPoint, point) != 0) {
                     lastPoint = point
                     destroyed.add(point)
-                    counter += 1
-                    if (counter == 200) {
+                    counter -= 1
+                    if (counter == 0) {
                         return point.x * 100 + point.y
                     }
                 }
             }
-            return counter
         }
+        throw IllegalStateException()
     }
 
 }
