@@ -7,11 +7,19 @@ class Day11Test {
 
     @Test
     fun firstStar() {
-        Assertions.assertThat(Day11().firstStar()).isEqualTo(0)
+        Assertions.assertThat(Day11().firstStar()).isEqualTo(1894)
     }
 
     @Test
     fun secondStar() {
-        Assertions.assertThat(Day11().secondStar()).isEqualTo(0)
+        val expected = listOf(
+            "   ██ █  █ ████ █    ████   ██ ███  █  █   ",
+            "    █ █ █     █ █       █    █ █  █ █  █   ",
+            "    █ ██     █  █      █     █ ███  ████   ",
+            "    █ █ █   █   █     █      █ █  █ █  █   ",
+            " █  █ █ █  █    █    █    █  █ █  █ █  █   ",
+            "  ██  █  █ ████ ████ ████  ██  ███  █  █   \n"
+        ).joinToString("\n")
+        Assertions.assertThat(Day11().secondStar()).isEqualTo(expected)
     }
 }

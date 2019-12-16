@@ -2,6 +2,7 @@ package ml.szloch.aoc.e2019.day09
 
 import ml.szloch.aoc.AoC
 import ml.szloch.aoc.e2019.VM
+import ml.szloch.aoc.e2019.VectorIO
 import java.util.*
 
 class Day09 : AoC<Long?, Long?> {
@@ -9,7 +10,7 @@ class Day09 : AoC<Long?, Long?> {
     override fun firstStar(): Long? {
         val memory = readMemory().toMutableMap()
 
-        val vm = VM(memory, Vector(listOf(1L)), Vector())
+        val vm = VM(memory, VectorIO(Vector(listOf(1L))), VectorIO())
         vm.startExecution()
         return vm.output.last()
     }
@@ -17,7 +18,7 @@ class Day09 : AoC<Long?, Long?> {
     override fun secondStar(): Long? {
         val memory = readMemory().toMutableMap()
 
-        val vm = VM(memory, Vector(listOf(2L)), Vector())
+        val vm = VM(memory, VectorIO(Vector(listOf(2L))), VectorIO())
         vm.startExecution()
         return vm.output.last()
     }

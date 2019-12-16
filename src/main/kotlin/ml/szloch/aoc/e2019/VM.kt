@@ -2,9 +2,40 @@ package ml.szloch.aoc.e2019
 
 import java.util.*
 
-class VM(val mem: MutableMap<Long, Long>, val input: Vector<Long>, val output: Vector<Long>) {
+interface VMInput {
+    fun hasNext(): Boolean
+    fun next(): Long
+}
+
+interface VMOutput {
+    fun print(v: Long)
+    fun last(): Long
+}
+
+class VectorIO(private val vec: Vector<Long> = Vector()) : VMInput, VMOutput {
+
+    private var idx = 0
+
+    override fun hasNext(): Boolean {
+        return idx < vec.size
+    }
+
+    override fun next(): Long {
+        val toReturn = vec[idx]
+        idx += 1
+        return toReturn
+    }
+
+    override fun print(v: Long) {
+        vec.add(v)
+    }
+
+    override fun last(): Long = vec.last()
+
+}
+
+class VM(val mem: MutableMap<Long, Long>, val input: VMInput, val output: VMOutput) {
     var ip = 0L
-    var iop = 0
     var rb = 0L
     var halted = false
 

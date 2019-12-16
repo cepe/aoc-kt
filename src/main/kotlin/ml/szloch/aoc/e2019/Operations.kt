@@ -14,17 +14,17 @@ class MulOp : Operation {
 
 class ReadOp : Operation {
     override fun execute(vm: VM) {
-        while (vm.input.size - 1 < vm.iop) {
+        while (!vm.input.hasNext()) {
             Thread.sleep(0)
         }
-        vm.mem[ad1(vm)] = vm.input[vm.iop]; vm.iop += 1; vm.ip += 2
+        vm.mem[ad1(vm)] = vm.input.next(); vm.ip += 2
     }
 }
 
 class WriteOp : Operation {
     override fun execute(vm: VM) {
         synchronized(vm.output) {
-            vm.output.add(op1(vm)); vm.ip += 2
+            vm.output.print(op1(vm)); vm.ip += 2
         }
     }
 }

@@ -2,7 +2,7 @@ package ml.szloch.aoc.e2019.day02
 
 import ml.szloch.aoc.AoC
 import ml.szloch.aoc.e2019.VM
-import java.util.*
+import ml.szloch.aoc.e2019.VectorIO
 
 class Day02 : AoC<Long?, Long?> {
 
@@ -18,7 +18,7 @@ class Day02 : AoC<Long?, Long?> {
         memory[2] = 2L
 
 
-        return VM(memory, Vector(), Vector()).startExecution().mem[0]
+        return VM(memory, VectorIO(), VectorIO()).startExecution().mem[0]
     }
 
     override fun secondStar(): Long? {
@@ -33,7 +33,7 @@ class Day02 : AoC<Long?, Long?> {
                 val mutableMemory = memory.toMutableMap()
                 mutableMemory[1] = noun
                 mutableMemory[2] = verb
-                if (VM(mutableMemory, Vector(), Vector()).startExecution().mem[0] == 19690720L) {
+                if (VM(mutableMemory, VectorIO(), VectorIO()).startExecution().mem[0] == 19690720L) {
                     return 100L * noun + verb
                 }
             }

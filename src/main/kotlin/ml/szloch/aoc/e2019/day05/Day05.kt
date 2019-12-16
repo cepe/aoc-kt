@@ -2,6 +2,7 @@ package ml.szloch.aoc.e2019.day05
 
 import ml.szloch.aoc.AoC
 import ml.szloch.aoc.e2019.VM
+import ml.szloch.aoc.e2019.VectorIO
 import java.util.*
 
 class Day05 : AoC<Long, Long> {
@@ -15,7 +16,7 @@ class Day05 : AoC<Long, Long> {
             .toMap()
             .toMutableMap()
 
-        val vm = VM(memory, Vector(listOf(1L)), Vector()); vm.startExecution()
+        val vm = VM(memory, VectorIO(Vector(listOf(1L))), VectorIO()); vm.startExecution()
         return vm.output.last()
     }
 
@@ -28,7 +29,7 @@ class Day05 : AoC<Long, Long> {
             .toMap()
             .toMutableMap()
 
-        val vm = VM(memory, Vector(listOf(5L)), Vector()); vm.startExecution()
+        val vm = VM(memory, VectorIO(Vector(listOf(5L))), VectorIO()); vm.startExecution()
         return vm.output.last()
     }
 }

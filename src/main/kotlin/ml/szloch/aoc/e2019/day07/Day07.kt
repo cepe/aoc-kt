@@ -2,6 +2,7 @@ package ml.szloch.aoc.e2019.day07
 
 import ml.szloch.aoc.AoC
 import ml.szloch.aoc.e2019.VM
+import ml.szloch.aoc.e2019.VectorIO
 import java.util.*
 import kotlin.concurrent.thread
 
@@ -30,7 +31,7 @@ class Day07 : AoC<Long?, Long?> {
             val mutableMemory = memory.toMutableMap()
             val output = Vector<Long>()
 
-            VM(mutableMemory, input, output).startExecution()
+            VM(mutableMemory, VectorIO(input), VectorIO(output)).startExecution()
             return output.last()
         }
 
@@ -62,7 +63,7 @@ class Day07 : AoC<Long?, Long?> {
 
         fun runProgram(input: Vector<Long>, output: Vector<Long>) {
             val mutableMemory = memory.toMutableMap()
-            VM(mutableMemory, input, output).startExecution()
+            VM(mutableMemory, VectorIO(input), VectorIO(output)).startExecution()
         }
 
         val perms = listOf(5L, 6, 7, 8, 9).perms()
