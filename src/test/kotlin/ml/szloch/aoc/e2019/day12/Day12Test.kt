@@ -7,7 +7,7 @@ class Day12Test {
 
     @Test
     fun firstStar() {
-        Assertions.assertThat(Day12().firstStar()).isEqualTo(0)
+        Assertions.assertThat(Day12().firstStar()).isEqualTo(7471)
     }
 
     @Test
