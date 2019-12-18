@@ -12,7 +12,7 @@ interface VMOutput {
     fun last(): Long
 }
 
-class VectorIO(private val vec: Vector<Long> = Vector()) : VMInput, VMOutput {
+class VectorIO(val vec: Vector<Long> = Vector()) : VMInput, VMOutput {
 
     private var idx = 0
 
