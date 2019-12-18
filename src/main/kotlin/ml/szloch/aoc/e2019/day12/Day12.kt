@@ -13,7 +13,7 @@ fun moon(list: List<Long>): Moon {
 }
 
 
-class Day12 : AoC<Long, Int> {
+class Day12 : AoC<Long, Long> {
 
 
     override fun firstStar(): Long {
@@ -21,7 +21,6 @@ class Day12 : AoC<Long, Int> {
 
         repeat(1000) {
             step(moons)
-            println(moons)
         }
 
         return moons.map { it.potential() * it.kinetic() }.sum()
@@ -59,13 +58,47 @@ class Day12 : AoC<Long, Int> {
         }
     }
 
+    fun gcd(a: Long, b: Long): Long = if (a == 0L) b else gcd(b % a, a)
+    fun lcm(a: Long, b: Long): Long = a * b / gcd(a, b)
 
-    override fun secondStar(): Int {
-        return 0
+    override fun secondStar(): Long {
+        val moons = coordinates().map { moon(it) }
+
+        val xs = moons.map { Pair(it.x, it.vx) }
+        val ys = moons.map { Pair(it.y, it.vy) }
+        val zs = moons.map { Pair(it.z, it.vz) }
+
+        var cnt = 0L
+        var xcycle = 0L
+        var ycycle = 0L
+        var zcycle = 0L
+
+        var allDone = 0
+        while (allDone != 7) {
+            cnt += 1
+            step(moons)
+
+            if (xs == moons.map { Pair(it.x, it.vx) }) {
+                allDone = allDone or 0x1
+                xcycle = cnt
+            }
+            if (ys == moons.map { Pair(it.y, it.vy) }) {
+                allDone = allDone or 0x2
+                ycycle = cnt
+            }
+            if (zs == moons.map { Pair(it.z, it.vz) }) {
+                allDone = allDone or 0x4
+                zcycle = cnt
+            }
+
+        }
+
+        return lcm(lcm(xcycle, ycycle), zcycle)
     }
 
 }
 
 fun main() {
+    Day12().secondStar()
     Day12().solve()
 }

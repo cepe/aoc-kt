@@ -12,6 +12,6 @@ class Day12Test {
 
     @Test
     fun secondStar() {
-        Assertions.assertThat(Day12().secondStar()).isEqualTo(0)
+        Assertions.assertThat(Day12().secondStar()).isEqualTo(376243355967784)
     }
 }
