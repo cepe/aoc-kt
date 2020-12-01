@@ -12,9 +12,9 @@ fi
 
 YEAR=$1
 SCRIPT_LOCATION="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-SOLUTIONS_LOCATION="$SCRIPT_LOCATION/src/main/kotlin/ml/szloch/aoc/e$YEAR"
-TESTS_LOCATION="$SCRIPT_LOCATION/src/test/kotlin/ml/szloch/aoc/e$YEAR"
-INPUT_FILES_LOCATION="$SCRIPT_LOCATION/src/main/resources/ml/szloch/aoc/e$YEAR"
+SOLUTIONS_LOCATION="$SCRIPT_LOCATION/src/main/kotlin/pl/kaq/aoc/e$YEAR"
+TESTS_LOCATION="$SCRIPT_LOCATION/src/test/kotlin/pl/kaq/aoc/e$YEAR"
+INPUT_FILES_LOCATION="$SCRIPT_LOCATION/src/main/resources/pl/kaq/aoc/e$YEAR"
 
 function create_directories_for_inputs() {
   for day in {01..25}; do
@@ -31,9 +31,9 @@ function create_directories_for_solutions() {
     else
       echo "Creating file $SOLUTION_FILE"
       cat >"$SOLUTION_FILE" <<EOF
-package ml.szloch.aoc.e$YEAR.day$day
+package pl.kaq.aoc.e$YEAR.day$day
 
-import ml.szloch.aoc.AoC
+import pl.kaq.aoc.AoC
 
 class Day$day : AoC<Int, Int> {
 
@@ -60,7 +60,7 @@ function create_directories_for_tests() {
     else
       echo "Creating file $TEST_FILE"
       cat >"$TEST_FILE" <<EOF
-package ml.szloch.aoc.e$YEAR.day$day
+package pl.kaq.aoc.e$YEAR.day$day
 
 import org.assertj.core.api.Assertions
 import org.junit.Test
