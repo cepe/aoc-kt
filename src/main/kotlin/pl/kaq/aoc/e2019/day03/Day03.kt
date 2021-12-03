@@ -33,19 +33,18 @@ class Wire(path: List<String>) {
     }
 }
 
-
 class Day03 : AoC<Int?, Int> {
 
     override fun firstStar(): Int? {
         val (firstWire, secondWire) = wires()
         val crosses = firstWire.points.intersect(secondWire.points)
-        return crosses.map { abs(it.first) + abs(it.second) }.min()
+        return crosses.map { abs(it.first) + abs(it.second) }.minOrNull()
     }
 
     override fun secondStar(): Int {
         val (firstWire, secondWire) = wires()
         val crosses = firstWire.points.intersect(secondWire.points)
-        val closestCross = crosses.minBy { firstWire.distanceTo[it]!! + secondWire.distanceTo[it]!! }
+        val closestCross = crosses.minByOrNull { firstWire.distanceTo[it]!! + secondWire.distanceTo[it]!! }
         return firstWire.distanceTo[closestCross]!! + secondWire.distanceTo[closestCross]!!
     }
 

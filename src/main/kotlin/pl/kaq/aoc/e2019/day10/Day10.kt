@@ -15,7 +15,7 @@ fun det(a: Point, b: Point, c: Point): Int {
 class Day10 : AoC<Int?, Int> {
 
     override fun firstStar(): Int? {
-        return asteroids().map { countVisible(it, asteroids().minus(it).sortedByAngle(it, Point(100, 100))) }.max()
+        return asteroids().maxOfOrNull { countVisible(it, asteroids().minus(it).sortedByAngle(it, Point(100, 100))) }
     }
 
     private fun asteroids(): List<Point> {

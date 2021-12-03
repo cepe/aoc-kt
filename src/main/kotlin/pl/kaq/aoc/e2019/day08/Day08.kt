@@ -7,7 +7,7 @@ class Day08 : AoC<Int, String> {
     override fun firstStar(): Int {
         val layer = inputTrimmed()
             .chunked(25 * 6)
-            .minBy { it.count { c -> c == '0' } }
+            .minByOrNull { it.count { c -> c == '0' } }
         return layer!!.count { it == '1' } * layer.count { it == '2' }
     }
 

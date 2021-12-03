@@ -46,7 +46,7 @@ class Day07 : AoC<Long?, Long?> {
                 val a5Out = runProgram(Vector(mutableListOf(it[4], a4Out)))
                 a5Out
             }
-        }.max()
+        }.maxOrNull()
     }
 
     private fun readMemory(): Map<Long, Long> {
@@ -83,7 +83,7 @@ class Day07 : AoC<Long?, Long?> {
 
                 a1Input.last()
             }
-        }.max()
+        }.maxOrNull()
     }
 }
 

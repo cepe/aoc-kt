@@ -1,6 +1,7 @@
 package pl.kaq.aoc.e2015.day03
 
 import pl.kaq.aoc.AoC
+import java.util.*
 import kotlin.reflect.KFunction0
 
 class Mover(var x: Int, var y: Int) {
@@ -54,7 +55,7 @@ class Day03 : AoC<Int, Int> {
         return visitedHouses.size
     }
 
-    private fun encodedMoves() = inputTrimmed().toLowerCase()
+    private fun encodedMoves() = inputTrimmed().lowercase(Locale.getDefault())
 
     private fun decodeMoves(mover: Mover, encodedSantaMoves: String): List<KFunction0<Unit>> {
         return encodedSantaMoves.map {

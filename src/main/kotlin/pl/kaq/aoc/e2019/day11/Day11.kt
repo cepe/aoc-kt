@@ -83,10 +83,10 @@ class Day11 : AoC<Int, String> {
         val io = RobotIO(mutableMapOf(Pair(Pair(0L, 0L), 1L)))
         val vm = VM(readMemory(), io, io)
         vm.startExecution()
-        val minX = io.board.keys.map { it.first }.min()!!
-        val maxX = io.board.keys.map { it.first }.max()!!
-        val minY = io.board.keys.map { it.second }.min()!!
-        val maxY = io.board.keys.map { it.second }.max()!!
+        val minX = io.board.keys.minOf { it.first }
+        val maxX = io.board.keys.maxOf { it.first }
+        val minY = io.board.keys.minOf { it.second }
+        val maxY = io.board.keys.maxOf { it.second }
 
         val sb: StringBuilder = StringBuilder()
         for (y in maxY downTo minY) {
