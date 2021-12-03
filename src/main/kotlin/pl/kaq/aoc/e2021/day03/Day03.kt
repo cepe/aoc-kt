@@ -35,7 +35,7 @@ class Day03 : AoC<Int, Int> {
             if (counter['0']!! <= counter['1']!!) '0' else '1'
         }
 
-        fun filterLines(lines: List<String>, idx: Int, criteria: (String) -> Char): String {
+        tailrec fun filterLines(lines: List<String>, idx: Int, criteria: (String) -> Char): String {
             if (lines.size == 1) {
                 return lines.first()
             }
