@@ -6,35 +6,27 @@ import pl.kaq.aoc.counted
 class Day06 : AoC<Long, Long> {
 
     override fun firstStar(): Long {
-        val nums = inputTrimmed()
-            .split(",")
-            .map { it.toInt() }
-            .counted()
-            .withDefault { 0 }
-
-        val pop = (0..8)
-            .map { nums.getValue(it).toLong() }
-            .toMutableList()
-
+        val pop = readMutablePopulation()
         repeat(80) { tick(pop) }
-
         return pop.sum()
     }
 
     override fun secondStar(): Long {
+        val pop = readMutablePopulation()
+        repeat(256) { tick(pop) }
+        return pop.sum()
+    }
+
+    private fun readMutablePopulation(): MutableList<Long> {
         val nums = inputTrimmed()
             .split(",")
             .map { it.toInt() }
             .counted()
             .withDefault { 0 }
 
-        val pop = (0..8)
+        return (0..8)
             .map { nums.getValue(it).toLong() }
             .toMutableList()
-
-        repeat(256) { tick(pop) }
-
-        return pop.sum()
     }
 
     private fun tick(pop: MutableList<Long>) {
