@@ -1,41 +1,27 @@
 package pl.kaq.aoc.e2021.day06
 
 import pl.kaq.aoc.AoC
-import pl.kaq.aoc.counted
 
 class Day06 : AoC<Long, Long> {
 
     override fun firstStar(): Long {
-        val pop = readMutablePopulation()
-        repeat(80) { tick(pop) }
-        return pop.sum()
+        return (1..80).fold(parsePopulation()) { prevPop, _ -> nextPop(prevPop) }.values.sum()
+    }
+
+    private fun nextPop(pop: Map<Int, Long>): Map<Int, Long> {
+        return (0..8).associateWith { pop.getValue((it + 1) % 9) + (if (it == 6) pop.getValue(0) else 0) }
     }
 
     override fun secondStar(): Long {
-        val pop = readMutablePopulation()
-        repeat(256) { tick(pop) }
-        return pop.sum()
+        return (1..256).fold(parsePopulation()) { prevPop, _ -> nextPop(prevPop) }.values.sum()
     }
 
-    private fun readMutablePopulation(): MutableList<Long> {
-        val nums = inputTrimmed()
-            .split(",")
+    private fun parsePopulation(): Map<Int, Long> {
+        return inputTrimmed().split(",")
             .map { it.toInt() }
-            .counted()
+            .groupingBy { it }.eachCount()
+            .mapValues { it.value.toLong() }
             .withDefault { 0 }
-
-        return (0..8)
-            .map { nums.getValue(it).toLong() }
-            .toMutableList()
-    }
-
-    private fun tick(pop: MutableList<Long>) {
-        val tmp = pop[0]
-        for (i in 0..7) {
-            pop[i] = pop[i + 1]
-        }
-        pop[8] = tmp
-        pop[6] += tmp
     }
 }
 
