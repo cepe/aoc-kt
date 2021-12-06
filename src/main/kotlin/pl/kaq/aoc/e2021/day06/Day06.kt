@@ -6,25 +6,22 @@ import kotlin.reflect.KFunction1
 class Day06 : AoC<Long, Long> {
 
     override fun firstStar(): Long {
-        return iterate(80, ::nextPop, readPopulation()).values.sum()
+        return ::nextPop.iterate(80, readPop()).values.sum()
     }
 
     override fun secondStar(): Long {
-        return iterate(256, ::nextPop, readPopulation()).values.sum()
+        return ::nextPop.iterate(256, readPop()).values.sum()
     }
 
-    private fun <T> iterate(times: Int, f: KFunction1<T, T>, init: T): T {
-        tailrec fun iterateRec(curr: T, counter: Int): T {
-            return if (counter == 0) curr else iterateRec(f(curr), counter - 1)
-        }
-        return iterateRec(init, times)
+    private fun <T> KFunction1<T, T>.iterate(times: Int, init: T): T {
+        return (1..times).fold(init) { acc, _ -> this(acc) }
     }
 
     private fun nextPop(pop: Map<Int, Long>): Map<Int, Long> {
         return (0..8).associateWith { pop.getValue((it + 1) % 9) + (if (it == 6) pop.getValue(0) else 0) }
     }
 
-    private fun readPopulation(): Map<Int, Long> {
+    private fun readPop(): Map<Int, Long> {
         return inputTrimmed().split(",")
             .map { it.toInt() }
             .groupingBy { it }.eachCount()
