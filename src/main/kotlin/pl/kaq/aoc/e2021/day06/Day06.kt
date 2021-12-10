@@ -6,11 +6,11 @@ import kotlin.reflect.KFunction1
 class Day06 : AoC<Long, Long> {
 
     override fun firstStar(): Long {
-        return generateSequence(readPop()) { nextPop(it) }.take(81).last().values.sum()
+        return generateSequence(readPop()) { nextPop(it) }.drop(80).first().values.sum()
     }
 
     override fun secondStar(): Long {
-        return generateSequence(readPop()) { nextPop(it) }.take(257).last().values.sum()
+        return generateSequence(readPop()) { nextPop(it) }.drop(256).first().values.sum()
     }
 
     private fun <T> KFunction1<T, T>.iterate(times: Int, init: T): T {
