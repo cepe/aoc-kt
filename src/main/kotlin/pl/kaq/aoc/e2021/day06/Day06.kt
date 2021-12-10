@@ -1,7 +1,6 @@
 package pl.kaq.aoc.e2021.day06
 
 import pl.kaq.aoc.AoC
-import kotlin.reflect.KFunction1
 
 class Day06 : AoC<Long, Long> {
 
@@ -11,10 +10,6 @@ class Day06 : AoC<Long, Long> {
 
     override fun secondStar(): Long {
         return generateSequence(readPop()) { nextPop(it) }.drop(256).first().values.sum()
-    }
-
-    private fun <T> KFunction1<T, T>.iterate(times: Int, init: T): T {
-        return (1..times).fold(init) { acc, _ -> this(acc) }
     }
 
     private fun nextPop(pop: Map<Int, Long>): Map<Int, Long> {
