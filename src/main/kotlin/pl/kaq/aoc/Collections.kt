@@ -9,7 +9,7 @@ fun <T> Iterable<T>.counters(): List<Int> {
     return this.groupingBy { it }.eachCount().map { it.value }
 }
 
-fun List<Long>.perms(): Sequence<List<Long>> {
+fun <T> List<T>.perms(): Sequence<List<T>> {
     val list = this
 
     return sequence {
