@@ -25,13 +25,11 @@ class Day12 : AoC<Int, Int> {
 
         for (neighborCave in caveNeighborhood) {
             if (neighborCave == neighborCave.lowercase()) {
-                if (neighborCave != "start") {
-                    if (neighborCave in seenCaves && !singleCaveVisited) {
-                        counter += countPaths(caveGraph, neighborCave, seenCaves, true)
-                    }
-                    if (neighborCave !in seenCaves) {
-                        counter += countPaths(caveGraph, neighborCave, seenCaves.plus(neighborCave), singleCaveVisited)
-                    }
+                if (neighborCave in seenCaves && !singleCaveVisited && neighborCave != "start") {
+                    counter += countPaths(caveGraph, neighborCave, seenCaves, true)
+                }
+                if (neighborCave !in seenCaves) {
+                    counter += countPaths(caveGraph, neighborCave, seenCaves.plus(neighborCave), singleCaveVisited)
                 }
             } else {
                 counter += countPaths(caveGraph, neighborCave, seenCaves, singleCaveVisited)
