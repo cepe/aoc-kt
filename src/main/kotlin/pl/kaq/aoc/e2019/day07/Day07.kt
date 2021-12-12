@@ -3,24 +3,9 @@ package pl.kaq.aoc.e2019.day07
 import pl.kaq.aoc.AoC
 import pl.kaq.aoc.e2019.VM
 import pl.kaq.aoc.e2019.VectorIO
+import pl.kaq.aoc.perms
 import java.util.*
 import kotlin.concurrent.thread
-
-private fun List<Long>.perms(): Sequence<List<Long>> {
-    val list = this
-
-    return sequence {
-        if (list.isEmpty()) {
-            yield(listOf())
-        } else {
-            for (elem in list) {
-                for (tailPerm in list.filter { it != elem }.perms()) {
-                    yield(listOf(elem).plus(tailPerm))
-                }
-            }
-        }
-    }
-}
 
 class Day07 : AoC<Long?, Long?> {
 
