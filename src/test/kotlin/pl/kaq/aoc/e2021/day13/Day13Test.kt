@@ -12,14 +12,14 @@ class Day13Test {
 
     @Test
     fun secondStar() {
-        val expected = listOf(
-            "███  ████ █  █ ███   ██    ██ ████ █  █",
-            "█  █ █    █ █  █  █ █  █    █    █ █  █",
-            "███  ███  ██   █  █ █       █   █  █  █",
-            "█  █ █    █ █  ███  █       █  █   █  █",
-            "█  █ █    █ █  █ █  █  █ █  █ █    █  █",
-            "███  █    █  █ █  █  ██   ██  ████  ██ "
-        ).joinToString("\n")
+        val expected = """
+            |███  ████ █  █ ███   ██    ██ ████ █  █
+            |█  █ █    █ █  █  █ █  █    █    █ █  █
+            |███  ███  ██   █  █ █       █   █  █  █
+            |█  █ █    █ █  ███  █       █  █   █  █
+            |█  █ █    █ █  █ █  █  █ █  █ █    █  █
+            |███  █    █  █ █  █  ██   ██  ████  ██ 
+        """.trimMargin()
 
         Assertions.assertThat(Day13().secondStar()).isEqualTo(expected)
     }
