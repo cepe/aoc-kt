@@ -7,13 +7,13 @@ class Day14 : AoC<Long, Long> {
     override fun firstStar(): Long {
         val (polymer, rules) = parseInput()
         val (min, max) = simulate(polymer, rules, 10)
-        return max / 2 + 1 - min / 2
+        return max - min
     }
 
     override fun secondStar(): Long {
         val (polymer, rules) = parseInput()
         val (min, max) = simulate(polymer, rules, 40)
-        return max / 2 + 1 - min / 2
+        return max - min
     }
 
     private fun simulate(polymer: String, rules: Map<String, String>, stepCount: Int): Pair<Long, Long> {
@@ -22,11 +22,11 @@ class Day14 : AoC<Long, Long> {
             .drop(stepCount)
             .first()
             .flatMap { (k, v) -> listOf(k[0] to v, k[1] to v) }
+            .plus(Pair(polymer.first(), 1L))
+            .plus(Pair(polymer.last(), 1L))
             .sumGroups()
 
-        val min = afterSteps.minOf { it.value }
-        val max = afterSteps.maxOf { it.value }
-        return Pair(min, max)
+        return Pair(afterSteps.minOf { it.value } / 2, afterSteps.maxOf { it.value } / 2)
     }
 
     private fun <T> List<Pair<T, Long>>.sumGroups(): Map<T, Long> {
